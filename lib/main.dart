@@ -1,18 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'login_Page.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
+
+  runApp(MyApp(isLoggedIn: isLoggedIn));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final bool isLoggedIn;
+  const MyApp({super.key, required this.isLoggedIn});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: WalletHomePage(),
+      home: isLoggedIn ? WalletHomePage() : LoginPage(),
     );
   }
 }
@@ -27,10 +33,10 @@ class WalletHomePage extends StatelessWidget {
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         items: const [
-          BottomNavigationBarItem(icon: Icon(LucideIcons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(LucideIcons.receipt), label: 'Bills'),
-          BottomNavigationBarItem(icon: Icon(LucideIcons.history), label: 'History'),
-          BottomNavigationBarItem(icon: Icon(LucideIcons.user), label: 'Profile'),
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+          BottomNavigationBarItem(icon: Icon(Icons.receipt), label: 'Bills'),
+          BottomNavigationBarItem(icon: Icon(Icons.history), label: 'History'),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
         ],
       ),
       body: SafeArea(
@@ -98,44 +104,6 @@ class WalletHomePage extends StatelessWidget {
                           Text("Tap to scan", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
                         ],
                       ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  ElevatedButton.icon(
-                    onPressed: () {},
-                    icon: Icon(Icons.account_balance_wallet),
-                    label: Text("Add Money to Wallet"),
-                  ),
-                  ElevatedButton.icon(
-                    onPressed: () {},
-                    icon: Icon(Icons.credit_card),
-                    label: Text("Check Wallet Balance"),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 20),
-              const Text("Notice Board", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-              const SizedBox(height: 10),
-              Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
-                  color: Colors.white,
-                  boxShadow: [
-                    BoxShadow(color: Colors.grey.shade200, blurRadius: 8, spreadRadius: 2),
-                  ],
-                ),
-                padding: const EdgeInsets.all(10),
-                child: Row(
-                  children: [
-                    Image.asset("assets/images/kurkure.webp", width: 50),
-                    const SizedBox(width: 10),
-                    const Expanded(
-                      child: Text("Hurry up! Grab the offer now", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                     ),
                   ],
                 ),
